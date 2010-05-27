@@ -5,8 +5,6 @@ class Libconfig <Formula
   homepage 'http://www.hyperrealm.com/libconfig/'
   md5 '3ebfb70dcb0c2ee454cda50fc634f4f2'
 
- depends_on 'libopennet'
-
   def install
     system "./configure", "--disable-debug", "--disable-dependency-tracking", "--prefix=#{prefix}"
     system "make"
