@@ -1,18 +1,18 @@
 require 'formula'
 
 class GitManuals < Formula
-  url 'http://kernel.org/pub/software/scm/git/git-manpages-1.7.2.tar.bz2'
-  md5 '0ea16b997dea4aec1f2f3d9c6a74abb8'
+  url 'http://kernel.org/pub/software/scm/git/git-manpages-1.7.2.2.tar.bz2'
+  md5 '2278da6b57891bd9b789d313dc8eb772'
 end
 
 class GitHtmldocs < Formula
-  url 'http://kernel.org/pub/software/scm/git/git-htmldocs-1.7.2.tar.bz2'
-  md5 '31b3d0c142709d5a4faafe52d962d435'
+  url 'http://kernel.org/pub/software/scm/git/git-htmldocs-1.7.2.2.tar.bz2'
+  md5 '83ce6457a4d80c38ce7c4d477bdf5600'
 end
 
 class Git < Formula
-  url 'http://kernel.org/pub/software/scm/git/git-1.7.2.tar.bz2'
-  md5 '652f861ae161e48979ef834707e2dc4c'
+  url 'http://kernel.org/pub/software/scm/git/git-1.7.2.2.tar.bz2'
+  md5 '4a5840b6d650692cb320eddb5ccefbaf'
   homepage 'http://git-scm.com'
 
   def install
@@ -30,8 +30,15 @@ class Git < Formula
 
     system "make", "prefix=#{prefix}", "install"
 
-    # Install the git bash completion file
-    (etc+'bash_completion.d').install 'contrib/completion/git-completion.bash'
+    # Install the git bash completion file.  Put it into the Cellar so
+    # that it gets upgraded along with git upgrades.  (Normally, etc
+    # files go directly into HOMEBREW_PREFIX so that they don't get
+    # clobbered on upgrade.)
+
+    (prefix+'etc/bash_completion.d').install 'contrib/completion/git-completion.bash'
+
+    # Install git-p4
+    bin.install 'contrib/fast-import/git-p4'
 
     # these files are exact copies of the git binary, so like the contents
     # of libexec/git-core lets hard link them
@@ -47,7 +54,6 @@ class Git < Formula
     # we could build the manpages ourselves, but the build process depends
     # on many other packages, and is somewhat crazy, this way is easier
     GitManuals.new.brew { man.install Dir['*'] }
-    doc = share+'doc/git-doc'
-    GitHtmldocs.new.brew { doc.install Dir['*'] }
+    GitHtmldocs.new.brew { (share+'doc/git-doc').install Dir['*'] }
   end
 end
