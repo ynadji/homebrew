@@ -16,7 +16,8 @@ class BerkeleyDb <Formula
 
     args = ["--disable-debug",
             "--prefix=#{prefix}", "--mandir=#{man}",
-            "--enable-cxx"]
+            "--enable-cxx",
+            "--enable-compat185"]
     args << "--enable-java" unless ARGV.include? "--without-java"
 
     # BerkeleyDB requires you to build everything from the build_unix subdirectory
