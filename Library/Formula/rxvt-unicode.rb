@@ -14,16 +14,29 @@ class RxvtUnicode < Formula
     DATA
   end
 
-  def install
-    system "./configure", "--prefix=#{prefix}",
-                          "--mandir=#{man}",
-                          "--disable-afterimage",
-                          "--enable-perl",
-                          "--enable-256-color",
-                          "--with-term=rxvt-unicode-256color",
-                          "--with-terminfo=/usr/share/terminfo",
-                          "--enable-smart-resize"
+  def disable_iso14755?; ARGV.include? "--disable-iso14755"; end
 
+  def options
+    [["--disable-iso14755", "Disable ISO 14775 Shift+Ctrl hotkey"]]
+  end
+
+  def install
+    args = [
+      "--prefix=#{prefix}",
+      "--mandir=#{man}",
+      "--disable-afterimage",
+      "--enable-perl",
+      "--enable-256-color",
+      "--with-term=rxvt-unicode-256color",
+      "--with-terminfo=/usr/share/terminfo",
+      "--enable-smart-resize"
+    ]
+
+    if disable_iso14755?
+      args << "--disable-iso14755"
+    end
+
+    system "./configure", *args
     system "make"
     # `make` won't work unless we rename this because of HFS's default case-insensitivity
     system "mv INSTALL README.install"
